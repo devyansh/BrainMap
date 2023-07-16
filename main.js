@@ -1,7 +1,8 @@
 import * as THREE from 'three'
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
-let scene, camera, renderer, object;
+let scene, camera, renderer, object, controls;
 
 async function init() {
     scene = new THREE.Scene();
@@ -25,6 +26,22 @@ async function init() {
 
     object.rotation.y = 0;
 	object.visible = true;
+
+	// Controls
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.target = object.position;
+
+	// Square
+    const squareGeometry = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(-1, 1, 0),
+        new THREE.Vector3(1, 1, 0),
+        new THREE.Vector3(1, -1, 0),
+        new THREE.Vector3(-1, -1, 0)
+    ]);
+
+	const squareMaterial = new THREE.LineBasicMaterial({ color: 0x000f00 });
+    const square = new THREE.LineLoop(squareGeometry, squareMaterial);
+    scene.add(square);
 	
     scene.add(object);
 
@@ -33,18 +50,16 @@ async function init() {
 
 function animate() {
     requestAnimationFrame(animate);
-    if (object) {
-        object.rotation.y += 0.01; // Rotates the object at each frame
-    }
+	controls.update(); // for damping
     renderer.render(scene, camera);
 }
 
 // Resize canvas on window resize
-//window.addEventListener('resize', function(){
-//    camera.aspect = window.innerWidth / window.innerHeight;
-//    camera.updateProjectionMatrix();
-//    renderer.setSize(window.innerWidth, window.innerHeight);
-//}, false);
+window.addEventListener('resize', function(){
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+   renderer.setSize(window.innerWidth, window.innerHeight);
+}, false);
 
 init();
 animate();
