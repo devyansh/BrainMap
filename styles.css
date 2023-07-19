@@ -1,0 +1,11 @@
+#overlay {
+    position: absolute;
+    top: 47%;
+    left: 50%;
+    width: 50vmin;
+    height: 50vmin;
+    margin-top: -25vmin; /* half of height */
+    margin-left: -25vmin; /* half of width */
+    border: 1px solid white;
+    pointer-events: none; /* allows mouse events to pass through */
+}
